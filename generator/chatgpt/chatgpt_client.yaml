@@ -1,0 +1,22 @@
+ClientName: "chatgpt_client"
+ClientRoot: "./generator/chatgpt/"
+
+MaxAsyncWorkerCnt: 20
+MaxRetryCnt: 3
+
+Config:
+  MaxTokenCount: 50000000
+  MaxLengthAllowed: 2000
+  WaitTime: 60  # in seconds
+  InputDirectory: "./data/original/open-web-text"
+  OutputDirectory: "./data/original/open-gpt-text"
+  Sampling: 0.02
+  InputSubsets:
+    - "urlsf_subset00"
+    - "urlsf_subset01"
+    - "urlsf_subset02"
+    - "urlsf_subset03"
+    - "urlsf_subset04"
+    - "urlsf_subset05"
+    - "urlsf_subset06"
+    - "urlsf_subset09"

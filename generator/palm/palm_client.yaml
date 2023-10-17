@@ -1,0 +1,18 @@
+ClientName: "palm_client"
+ClientRoot: "./generator/palm/"
+
+RateControl:
+  entry_per_min: 45
+  min_wait_time: 0.1
+
+Config:
+  project: "llm-sentinel"
+  ModelName: "text-bison@001"
+  Temperature: 0.4
+  # We will clip the text up to first 512 tokens, so we let PaLM generate a little bit more
+  MaxDecodeSteps: 640  # Up to 1024, the number of tokens output
+  top_p: 0.95
+  top_k: 40
+  retry: 3
+  # setup vertex AI
+  CredentialPath: "./generator/palm/secret.json"

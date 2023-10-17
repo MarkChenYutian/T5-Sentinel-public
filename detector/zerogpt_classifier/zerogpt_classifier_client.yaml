@@ -1,0 +1,33 @@
+ClientName: "zerogpt_classifier"
+ClientRoot: "./detector/zerogpt_classifier"
+
+MaxAsyncWorkerCnt: 180
+MaxRetryCnt: 3
+
+Config:
+  InputDirectory:
+#    - "./data/split/open-gpt-text/test-dirty.jsonl"
+#    - "./data/split/open-web-text/test-dirty.jsonl"
+#    - "./data/split/open-llama-text/test-dirty.jsonl"
+#    - "./data/split/open-palm-text/test-dirty.jsonl"
+#    - "./data/split/gpt2-output/test-dirty.jsonl"
+     - "./data/split/hc3-test/hc3-human.jsonl"
+     - "./data/split/hc3-test/hc3-chatgpt.jsonl"
+
+  OutputDirectory:
+#    - "./data/baselines/zerogpt_classifier_output/open-gpt-text.jsonl"
+#    - "./data/baselines/zerogpt_classifier_output/open-web-text.jsonl"
+#    - "./data/baselines/zerogpt_classifier_output/open-llama-text.jsonl"
+#    - "./data/baselines/zerogpt_classifier_output/open-palm-text.jsonl"
+#    - "./data/baselines/zerogpt_classifier_output/gpt2-output.jsonl"
+     - "./data/baselines/zerogpt_classifier_output/hc3-human.jsonl"
+     - "./data/baselines/zerogpt_classifier_output/hc3-chatgpt.jsonl"
+
+  WaitTime: 60
+  URL: https://api.zerogpt.com/api/detect/detectText
+
+  Header:
+    Content-Type: application/json
+    Origin: https://www.zerogpt.com
+    Referer: https://www.zerogpt.com/
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36

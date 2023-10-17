@@ -1,0 +1,35 @@
+ClientName: "openai_classifier"
+ClientRoot: "./detector/openai_classifier/"
+
+MaxAsyncWorkerCnt: 120
+MaxRetryCnt: 3
+
+Config:
+  InputDirectory:
+#    - "./data/split/open-gpt-text/test-dirty.jsonl"
+#    - "./data/split/open-web-text/test-dirty.jsonl"
+#    - "./data/split/open-palm-text/test-dirty.jsonl"
+#    - "./data/split/open-llama-text/test-dirty.jsonl"
+#    - "./data/split/gpt2-output/test-dirty.jsonl"
+    - "./data/split/hc3-test/hc3-human.jsonl"
+    - "./data/split/hc3-test/hc3-chatgpt.jsonl"
+
+  OutputDirectory:
+#    - "./data/baselines/openai_classifier_output/open-gpt-text.jsonl"
+#    - "./data/baselines/openai_classifier_output/open-web-text.jsonl"
+#    - "./data/baselines/openai_classifier_output/open-palm-text.jsonl"
+#    - "./data/baselines/openai_classifier_output/open-llama-text.jsonl"
+#    - "./data/baselines/openai_classifier_output/gpt2-output.jsonl"
+    - "./data/baselines/openai_classifier_output/hc3-human.jsonl"
+    - "./data/baselines/openai_classifier_output/hc3-chatgpt.jsonl"
+
+  WaitTime: 60
+  URL: https://api.openai.com/v1/completions
+
+  Header:
+    Content-Type: application/json
+    Referer: https://platform.openai.com/
+    Origin: https://platform.openai.com
+    User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/112.0.0.0 Safari/537.36
+    OpenAI-Organization: [in secret.json]
+    Authorization: [in secret.json]

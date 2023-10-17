@@ -1,0 +1,24 @@
+# Amount of time to wait between requests.
+break-seconds: 5
+
+# Maximum number of requests to make before silence.
+requests-limit: 150
+
+# Minutes of silence before next request period.
+silence-minutes: 30
+
+# Seconds to wait for a response before timing out.
+timeout-seconds: 10
+
+# Path to the original dataset.
+import-path: data/split/open-web-text
+
+# Path to the file where generated text will be saved.
+export-path: data/split/open-bard-text
+
+# List of subsets from the original dataset to be used.
+required-files:
+    - test.jsonl
+
+# Prompt to be used for generating text.
+question-prompt: "Rephrase the following without any additional details (i.e. no summarized title, no internet access):"

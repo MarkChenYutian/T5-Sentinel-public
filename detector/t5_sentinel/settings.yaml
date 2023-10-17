@@ -1,0 +1,45 @@
+id: models-small.0613.b
+
+mode: training
+
+epochs: 15
+
+backbone: 
+  name: models-small
+  model_max_length: 512
+
+dataset:
+  - label: Human
+    token: <extra_id_0>
+    token_id: 32099
+    root: data/split/open-web-text
+  - label: ChatGPT
+    token: <extra_id_1>
+    token_id: 32098
+    root: data/split/open-gpt-text
+  - label: PaLM
+    token: <extra_id_2>
+    token_id: 32097
+    root: data/split/open-palm-text
+  - label: LLaMA
+    token: <extra_id_3>
+    token_id: 32096
+    root: data/split/open-llama-text
+  - label: GPT2
+    token: <extra_id_4>
+    token_id: 32095
+    root: data/split/gpt2-output
+
+dataloader:
+  batch_size: 16
+  num_workers: 4
+
+tokenizer:
+  padding: true
+  truncation: true
+  return_tensors: pt
+
+optimizer:
+  lr: 1.0e-4
+  weight_decay: 5.0e-5
+  batch_size: 128

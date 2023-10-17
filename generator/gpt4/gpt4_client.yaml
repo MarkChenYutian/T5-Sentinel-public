@@ -1,0 +1,17 @@
+ClientName: "gpt4_client"
+ClientRoot: "./generator/gpt4/"
+
+MaxAsyncWorkerCnt: 20
+MaxRetryCnt: 3
+
+Config:
+  MaxTokenCount: 10000000
+  MaxLengthAllowed: 2000
+  WaitTime: 60  # in seconds
+  InputDirectory: "./data/split/open-web-text"
+  OutputDirectory: "./data/split/open-gpt4-text"
+  Sampling: 1   # No sampling
+  InputSubsets:
+    - "test-dirty"
+    # We are using test-dirty since the text sent to model is not sanitized
+    # for chatGPT

@@ -1,0 +1,12 @@
+gdown>=4.6.6
+PyYaml
+bardapi
+unidecode
+tqdm
+openai
+aiohttp
+wandb
+transformers
+numpy
+matplotlib
+seaborn
