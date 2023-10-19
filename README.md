@@ -8,10 +8,8 @@ As shown in `requirements.txt` in the root directory.
 
 ## Evaluate
 
-1. Download the checkpoints `0622.hidden.a.pt`, `t5-small.0613.a.pt` and `solaiman-detector-base.pt` and place in the `./data/checkpoint` directory. The models can be found in Release page of this repository.
-2. Download the OpenLLMText dataset in the `./data/split` directory
-
-3. Run the following files
+1. Run `./data/download.py` to automatically download Dataset & model checkpoint
+2. Run the following files in need
    1. `./evaluator/calc/calc_accuracy.py` to calculate the accuracy under different settings for each module
    2. `./evaluator/interpret/integrated_gradient.ipynb` to calculate the integrated gradient for samples
    3. `./evaluator/interpret/sample_pca.py` to calculate the PCA analysis for hidden layers of the test subset
