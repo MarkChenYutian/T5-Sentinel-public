@@ -4,7 +4,7 @@ Release repo for our work "Token Prediction as Implicit Classification to Identi
 
 ## Requirement
 
-As shown in `requirements.txt` in the root directory.
+Run `pip install -r requirements.txt` to install dependencies.
 
 ## Evaluate
 
@@ -14,6 +14,8 @@ As shown in `requirements.txt` in the root directory.
    2. `./evaluator/interpret/integrated_gradient.ipynb` to calculate the integrated gradient for samples
    3. `./evaluator/interpret/sample_pca.py` to calculate the PCA analysis for hidden layers of the test subset
    4. `./evaluator/plot/*.py` to generate plots of related metrics (confusion matrix, roc, det, etc.)
+
+Note that python files are in module, so to use `./evaluator/calc/calc_accuracy.py`, you need to run `python3 -m evaluator.calc.calc_accuracy`.
 
 ## Train
 
