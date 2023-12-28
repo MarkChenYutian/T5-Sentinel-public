@@ -28,7 +28,7 @@ Run `pip install -r requirements.txt` to install dependencies.
    3. `./evaluator/interpret/sample_pca.py` to calculate the PCA analysis for hidden layers of the test subset
    4. `./evaluator/plot/*.py` to generate plots of related metrics (confusion matrix, roc, det, etc.)
 
-Note that python files are in module, so to use `./evaluator/calc/calc_accuracy.py`, you need to run `python3 -m evaluator.calc.calc_accuracy`.
+**Note that python files are in module**, so to use `./evaluator/calc/calc_accuracy.py`, you need to run `python3 -m evaluator.calc.calc_accuracy`.
 
 ## Train
 
