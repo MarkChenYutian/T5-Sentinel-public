@@ -42,7 +42,9 @@ class SentinelGradientExtractor(torch.nn.Module):
         self.mid_results.append(embed_result)
 
         mix_percent = self.step / self.max_step
-        mix_result: torch.Tensor = mix_percent * embed_result + (1 - mix_percent) * self.pad_result
+        mix_result: torch.Tensor = (
+            mix_percent * embed_result + (1 - mix_percent) * self.pad_result
+        )
         # mix_result.requires_grad_(True)
         # mix_result.retain_grad()
         # self.mid_results.append(mix_result)
@@ -76,23 +78,27 @@ def injectSentinel(model: Sentinel):
 
 
 model = injectSentinel(Sentinel())
-# checkpoint = torch.load(Path("data", "checkpoint", "models-small.0613.a.pt"))
-checkpoint = torch.load(Path("data", "checkpoint", "models.t5_sentinel.0613.pt"))
+checkpoint = torch.load(Path("data", "checkpoint", "models.T5Sentinel.0613.pt"))
 model.load_state_dict(checkpoint["model"])
 model = model.cuda().eval()
+
 
 def explain(text, label):
     tokenizer = Tokenizer.from_pretrained("models-small", model_max_length=512)
     label_tokenizer = Tokenizer.from_pretrained("models-small", model_max_length=2)
 
-    text_tokenized = tokenizer.batch_encode_plus((text,), padding=True, truncation=True, return_tensors="pt")
-    lab_tokenized  = label_tokenizer.batch_encode_plus((label,), padding=True, truncation=True, return_tensors="pt")
+    text_tokenized = tokenizer.batch_encode_plus(
+        (text,), padding=True, truncation=True, return_tensors="pt"
+    )
+    lab_tokenized = label_tokenizer.batch_encode_plus(
+        (label,), padding=True, truncation=True, return_tensors="pt"
+    )
 
     for i in range(100):
         prob = model.interpretability_study_entry(
             text_tokenized.input_ids.cuda(),
             text_tokenized.attention_mask.cuda(),
-            lab_tokenized.input_ids.cuda()
+            lab_tokenized.input_ids.cuda(),
         )
 
     all_gradient = [mid.grad for mid in model.injected_embedder.mid_results]
@@ -122,11 +128,18 @@ def visualize_explain_simple(text, label):
     mask_1std = more_than_1std
     for idx in range(gradient.shape[0]):
         tok = tokens[idx]
-        if   mask_0std[idx].item(): print(click.style(tok, fg="yellow"), end=" ")
-        elif mask_1std[idx].item(): print(click.style(tok, fg="red")   , end=" ")
-        else: print(tok, end=" ")
+        if mask_0std[idx].item():
+            print(click.style(tok, fg="yellow"), end=" ")
+        elif mask_1std[idx].item():
+            print(click.style(tok, fg="red"), end=" ")
+        else:
+            print(tok, end=" ")
     print("")
+
 
 if __name__ == "__main__":
     visualize_explain_simple("Hello world!", "<extra_id_0>")
-    visualize_explain_simple("Media playback is unsupported on your device Media caption Hungarian Prime Minister Viktor Orban: \"It's a serious ecological catastrophe\"\n\nToxic red sludge from a spill at an industrial plant in Hungary has reached the River Danube, officials say.\n\nThey said alkaline levels that killed all fish in one river were now greatly reduced, but were being monitored.\n\nPM Viktor Orban called the spill an \"ecological tragedy\". There are fears the mud, which burst out of a reservoir on Monday, could poison the Danube.\n\nCountries downstream from Hungary, including Croatia, Serbia and Romania, are drawing up emergency plans.\n\nA million cubic metres (35m cu ft) of the sludge spilled from a reservoir at an alumina plant in Ajka in western Hungary. Four people were killed and about 100 injured.\n\nThe mud also caused massive damage in nearby villages and towns, as well as a wide swathe of farmland.\n\nNo victory declaration\n\nDisaster official Tibor Dobson said all life in the Marcal river, which feeds the Danube, had been \"extinguished\".\n\nThe BBC's Nick Thorpe in western Hungary says news that the spill has now reached the Danube is worrying.\n\nTests are being carried out for two potential hazards - a powerful alkaline solution and heavy metals.\n\nOfficials say both are below toxic levels for humans in the Danube and its tributary, the Raba.\n\nBut Mr Dobson said this was \"by no means a victory declaration\".\n\nDead fish have been spotted in both rivers, Mr Dobson notes.\n\nTo save their eco-system, he adds, pH levels must be reduced to 8 from about 9 recently recorded at the confluence of the Raba with the Danube.\n\nThe authorities have been pouring a mixture of clay and acid to reduce alkalinity.\n\n\"The main effort is now being concentrated on the Raba and the Danube,\" Mr Dobson said. \"That's what has to be saved.\"\n\nPhilip Weller, executive director of the International Commission for the Protection of the Danube, told the BBC that that the best one could hope was for the Danube to dilute the toxic sludge.\n\n\"It's a rather large amount of water in the Danube that the dilution effects will at least mean that there will not be immediate consequences,\" he said.\n\nAbandoning villages\n\nEnvironmental expert Paul Younger of Newcastle University says high alkaline concentrations are an irritant, but not life-threatening for people.\n\n\"It's not like a big cyanide spill,\" he told the BBC.\n\nThe sludge itself is a hazardous mixture of water and mining waste containing heavy metals.\n\nThe victims are believed to have drowned, with the depth of the fast-moving flood reaching 2m (6.5ft) in places, but many of those injured suffered chemical burns.\n\nOn Thursday Mr Orban visited the village of Kolontar, the worst-affected settlement, and said some areas would have to be abandoned.\n\n\"Hungary is strong enough to be able to combat the effects of such a catastrophe. But we're still open to any expertise which will help us combat the pollution effects,\" he added.\n\nAngry villagers confronted a company official in Kolontar on Wednesday evening. They say they plan to sue the firm for damages.\n\nHerwit Schuster, a spokesman for Greenpeace International, described the spill as \"one of the top three environmental disasters in Europe in the last 20 or 30 years\".\n\nLand had been \"polluted and destroyed for a long time\", he told AP.\n\n\"If there are substances like arsenic and mercury, that would affect river systems and ground water on long-term basis,\" he added.", "<extra_id_0>")
+    visualize_explain_simple(
+        'Media playback is unsupported on your device Media caption Hungarian Prime Minister Viktor Orban: "It\'s a serious ecological catastrophe"\n\nToxic red sludge from a spill at an industrial plant in Hungary has reached the River Danube, officials say.\n\nThey said alkaline levels that killed all fish in one river were now greatly reduced, but were being monitored.\n\nPM Viktor Orban called the spill an "ecological tragedy". There are fears the mud, which burst out of a reservoir on Monday, could poison the Danube.\n\nCountries downstream from Hungary, including Croatia, Serbia and Romania, are drawing up emergency plans.\n\nA million cubic metres (35m cu ft) of the sludge spilled from a reservoir at an alumina plant in Ajka in western Hungary. Four people were killed and about 100 injured.\n\nThe mud also caused massive damage in nearby villages and towns, as well as a wide swathe of farmland.\n\nNo victory declaration\n\nDisaster official Tibor Dobson said all life in the Marcal river, which feeds the Danube, had been "extinguished".\n\nThe BBC\'s Nick Thorpe in western Hungary says news that the spill has now reached the Danube is worrying.\n\nTests are being carried out for two potential hazards - a powerful alkaline solution and heavy metals.\n\nOfficials say both are below toxic levels for humans in the Danube and its tributary, the Raba.\n\nBut Mr Dobson said this was "by no means a victory declaration".\n\nDead fish have been spotted in both rivers, Mr Dobson notes.\n\nTo save their eco-system, he adds, pH levels must be reduced to 8 from about 9 recently recorded at the confluence of the Raba with the Danube.\n\nThe authorities have been pouring a mixture of clay and acid to reduce alkalinity.\n\n"The main effort is now being concentrated on the Raba and the Danube," Mr Dobson said. "That\'s what has to be saved."\n\nPhilip Weller, executive director of the International Commission for the Protection of the Danube, told the BBC that that the best one could hope was for the Danube to dilute the toxic sludge.\n\n"It\'s a rather large amount of water in the Danube that the dilution effects will at least mean that there will not be immediate consequences," he said.\n\nAbandoning villages\n\nEnvironmental expert Paul Younger of Newcastle University says high alkaline concentrations are an irritant, but not life-threatening for people.\n\n"It\'s not like a big cyanide spill," he told the BBC.\n\nThe sludge itself is a hazardous mixture of water and mining waste containing heavy metals.\n\nThe victims are believed to have drowned, with the depth of the fast-moving flood reaching 2m (6.5ft) in places, but many of those injured suffered chemical burns.\n\nOn Thursday Mr Orban visited the village of Kolontar, the worst-affected settlement, and said some areas would have to be abandoned.\n\n"Hungary is strong enough to be able to combat the effects of such a catastrophe. But we\'re still open to any expertise which will help us combat the pollution effects," he added.\n\nAngry villagers confronted a company official in Kolontar on Wednesday evening. They say they plan to sue the firm for damages.\n\nHerwit Schuster, a spokesman for Greenpeace International, described the spill as "one of the top three environmental disasters in Europe in the last 20 or 30 years".\n\nLand had been "polluted and destroyed for a long time", he told AP.\n\n"If there are substances like arsenic and mercury, that would affect river systems and ground water on long-term basis," he added.',
+        "<extra_id_0>",
+    )
