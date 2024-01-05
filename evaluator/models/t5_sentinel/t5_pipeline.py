@@ -15,7 +15,7 @@ class T5PredictionOutput(Tp.TypedDict):
 
 
 class ExecuteT5(P.Pipeline[Tp.Optional[P.TextEntry], Tp.Optional[T5PredictionOutput]]):
-    def __init__(self, weight_path: Path, backbone_name: str = "models-small"):
+    def __init__(self, weight_path: Path, backbone_name: str = "t5-small"):
         assert weight_path.exists()
         super().__init__()
 
@@ -91,8 +91,7 @@ class T5PredictToHidden(
 
 if __name__ == "__main__":
     pipe = (
-        ExecuteT5(Path("./data/checkpoint/models.T5Sentinel.0613.pt"))
-        >> T5PredictToLogits()
+        ExecuteT5(Path("./data/checkpoint/T5Sentinel.0613.pt")) >> T5PredictToLogits()
     )
     result = pipe(
         {

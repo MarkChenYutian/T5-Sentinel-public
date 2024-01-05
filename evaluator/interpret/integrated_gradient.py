@@ -78,14 +78,14 @@ def injectSentinel(model: Sentinel):
 
 
 model = injectSentinel(Sentinel())
-checkpoint = torch.load(Path("data", "checkpoint", "models.T5Sentinel.0613.pt"))
+checkpoint = torch.load(Path("data", "checkpoint", "T5Sentinel.0613.pt"))
 model.load_state_dict(checkpoint["model"])
 model = model.cuda().eval()
 
 
 def explain(text, label):
-    tokenizer = Tokenizer.from_pretrained("models-small", model_max_length=512)
-    label_tokenizer = Tokenizer.from_pretrained("models-small", model_max_length=2)
+    tokenizer = Tokenizer.from_pretrained("t5-small", model_max_length=512)
+    label_tokenizer = Tokenizer.from_pretrained("t5-small", model_max_length=2)
 
     text_tokenized = tokenizer.batch_encode_plus(
         (text,), padding=True, truncation=True, return_tensors="pt"

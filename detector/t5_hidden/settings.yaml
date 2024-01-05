@@ -1,11 +1,11 @@
-id: models-small.0621.a
+id: t5-small.0621.a
 
 mode: training
 
 epochs: 15
 
-backbone: 
-  name: models-small
+backbone:
+  name: t5-small
   model_max_length: 512
 
 dataset:

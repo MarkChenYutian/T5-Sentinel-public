@@ -14,11 +14,11 @@ class BackboneField(BaseModel):
     @validator("name")
     def verify_name(cls, v: str):
         if v not in [
-            "models-small",
-            "models-base",
-            "models-large",
-            "models-3b",
-            "models-11b",
+            "t5-small",
+            "t5-base",
+            "t5-large",
+            "t5-3b",
+            "t5-11b",
         ]:
             raise ValueError(f"Backbone using {v} is not supported!")
         return v
