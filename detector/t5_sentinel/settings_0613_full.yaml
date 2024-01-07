@@ -1,11 +1,11 @@
-id: models-small.0613.t5_sentinel.b
+id: t5-small.0613.t5_sentinel.b
 
 mode: training
 
 epochs: 15
 
-backbone: 
-  name: models-small
+backbone:
+  name: t5-small
   model_max_length: 512
 
 dataset:

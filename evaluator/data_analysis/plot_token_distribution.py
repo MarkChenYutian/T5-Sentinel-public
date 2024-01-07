@@ -8,27 +8,38 @@ from evaluator.toolkit import *
 from tqdm import tqdm
 import string
 
-Tokenizer = T5TokenizerFast.from_pretrained("models-small")
+Tokenizer = T5TokenizerFast.from_pretrained("t5-small")
+
 
 def count_character(s: str, counter: dict) -> None:
     tokens = Tokenizer.encode(s)
     for tok in tokens:
-        if tok in counter: counter[tok] += 1
-        else: counter[tok] = 1
+        if tok in counter:
+            counter[tok] += 1
+        else:
+            counter[tok] = 1
 
 
-def argeq(a, b): return a[0] == b[0]
+def argeq(a, b):
+    return a[0] == b[0]
 
 
 @memoizer.memoize(Path("cache", "dataset_token_count_cache.pt"), arg_eq=argeq)
-def count_dataset(dataset: Tp.Literal["human", "chatgpt", "palm", "llama", "gpt2"]) -> dict:
+def count_dataset(
+    dataset: Tp.Literal["human", "chatgpt", "palm", "llama", "gpt2"]
+) -> dict:
     selected_files = {
-        "human": Human_Data, "chatgpt": GPT3_Data, "palm": PaLM_Data, "llama": LLaMA_Data, "gpt2": GPT2_Data
+        "human": Human_Data,
+        "chatgpt": GPT3_Data,
+        "palm": PaLM_Data,
+        "llama": LLaMA_Data,
+        "gpt2": GPT2_Data,
     }[dataset]
 
     counter = {c: 0 for c in string.printable}
     dataset = load_data(selected_files)
-    for entry in tqdm(dataset): count_character(entry, counter)
+    for entry in tqdm(dataset):
+        count_character(entry, counter)
 
     total_token = sum([counter[k] for k in counter])
     result = {k: counter[k] / total_token for k in counter}
@@ -50,7 +61,8 @@ def filter_dict(counter: dict, keys: list) -> dict:
 
 def merge_keys(*arr_keys) -> list:
     set_keys = set()
-    for keys in arr_keys: set_keys = set_keys.union(set(keys))
+    for keys in arr_keys:
+        set_keys = set_keys.union(set(keys))
     return list(set_keys)
 
 
@@ -62,10 +74,10 @@ def sort_keys(counter, keys) -> list:
 
 def plot_distribution():
     human_counter = count_dataset("human")
-    gpt3_counter  = count_dataset("chatgpt")
-    palm_counter  = count_dataset("palm")
+    gpt3_counter = count_dataset("chatgpt")
+    palm_counter = count_dataset("palm")
     llama_counter = count_dataset("llama")
-    gpt2_counter  = count_dataset("gpt2")
+    gpt2_counter = count_dataset("gpt2")
 
     # selected_keys = merge_keys(
     #     get_top_k_chars(human_counter, 40),
@@ -80,7 +92,7 @@ def plot_distribution():
     gpt3_counter = filter_dict(gpt3_counter, selected_keys)
     palm_counter = filter_dict(palm_counter, selected_keys)
     llama_counter = filter_dict(llama_counter, selected_keys)
-    gpt2_counter  = filter_dict(gpt2_counter, selected_keys)
+    gpt2_counter = filter_dict(gpt2_counter, selected_keys)
     selected_keys = sort_keys(human_counter, selected_keys)
     display_keys = [Tokenizer.decode(k) for k in selected_keys]
 
@@ -90,25 +102,32 @@ def plot_distribution():
     categoryies = ["Human", "GPT3.5", "PaLM", "LLaMA", "GPT2"]
     all_data = [human_counter, gpt3_counter, palm_counter, llama_counter, gpt2_counter]
 
-    for idx, (category, counter, color, ax) in enumerate(zip(categoryies, all_data, colors, axes)):
+    for idx, (category, counter, color, ax) in enumerate(
+        zip(categoryies, all_data, colors, axes)
+    ):
         values = [counter[k] for k in selected_keys]
         ax.barh(display_keys, values, color=color)
 
-    for ax in axes[1:]: ax.get_yaxis().set_visible(False)
+    for ax in axes[1:]:
+        ax.get_yaxis().set_visible(False)
     for ax, cate in zip(axes, categoryies):
         ax.set_title(cate)
         ax.xaxis.set_major_formatter(mtick.PercentFormatter(1.0))
     axes[0].set_yticklabels(display_keys, fontdict=dict(fontsize=7))
 
-    fig.text(0.01, 0.5, 'Most common tokens in OpenLLMText dataset', va='center', rotation='vertical')
-    fig.text(0.5, 0.01, 'Frequency', ha='center')
+    fig.text(
+        0.01,
+        0.5,
+        "Most common tokens in OpenLLMText dataset",
+        va="center",
+        rotation="vertical",
+    )
+    fig.text(0.5, 0.01, "Frequency", ha="center")
     fig.savefig("./result/data/dataset_token_count.pdf")
 
 
 if __name__ == "__main__":
-    TASKS = [
-        plot_distribution
-    ]
+    TASKS = [plot_distribution]
     for task in TASKS:
         print(f"Executing {task.__name__}")
         task()
